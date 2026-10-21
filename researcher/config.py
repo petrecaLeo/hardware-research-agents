@@ -19,6 +19,8 @@ WEB_SEARCH_PRICE = 0.01
 
 # Quantas vezes cada subagente pode usar cada ferramenta numa pesquisa.
 TOOL_LIMITS = {"WebSearch": 3, "WebFetch": 4}
+# Depois disso a busca perde o acesso à internet e responde com o que tem. As buscas reais levam de 30 a 45 s.
+SEARCH_TIMEOUT_S = 90
 COORDINATOR_MAX_TURNS = 8
 SEARCH_MAX_TURNS = 10
 # Analista e sintetizador respondem numa volta; a segunda é para corrigir o formato.

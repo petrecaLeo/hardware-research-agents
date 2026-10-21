@@ -6,6 +6,13 @@ from .config import REPORTS_DIR
 URL = re.compile(r"https?://[^\s)\]>\"'|]+")
 
 
+# A seção de cobertura vem do script, logo antes das fontes. Sem seção de fontes, vai no fim.
+def add_coverage(report, coverage):
+    if "## Fontes" in report:
+        return report.replace("## Fontes", f"{coverage}\n\n## Fontes", 1)
+    return f"{report.rstrip()}\n\n{coverage}\n"
+
+
 def save_report(text):
     REPORTS_DIR.mkdir(exist_ok=True)
     path = REPORTS_DIR / f"{datetime.now():%Y-%m-%d-%H%M%S}.md"

@@ -15,9 +15,10 @@ from .agents import AGENTS, load_prompt
 from .config import COORDINATOR_MAX_TURNS, ENV, MAX_BUDGET_USD, MODEL
 from .contracts import enforce_contract
 from .cost import print_cost
-from .guards import limit_web_tools
+from .coverage import coverage_section
+from .guards import WebGuard
 from .progress import Progress
-from .report import check_sources, save_report
+from .report import add_coverage, check_sources, save_report
 
 WEB_TOOLS = ["WebSearch", "WebFetch"]
 SEARCH_MODES = {
@@ -29,7 +30,7 @@ SEARCH_MODES = {
 }
 
 
-def build_options(mode):
+def build_options(mode, guard):
     system_prompt = (
         load_prompt("coordinator")
         .replace("{hoje}", f"{date.today():%d/%m/%Y}")
@@ -52,16 +53,18 @@ def build_options(mode):
         max_budget_usd=MAX_BUDGET_USD,
         env=ENV,
         hooks={
-            "PreToolUse": [HookMatcher(matcher="|".join(WEB_TOOLS), hooks=[limit_web_tools])],
+            "PreToolUse": [HookMatcher(matcher="|".join(WEB_TOOLS), hooks=[guard.check])],
             "SubagentStop": [HookMatcher(hooks=[enforce_contract])],
         },
     )
 
 
-async def research(request, mode="paralelo"):
+async def research(request, mode="paralelo", simulate_timeout=False):
     print(f"Pedido: {request}\nBuscas: {mode}\n")
     progress = Progress()
-    async with ClaudeSDKClient(options=build_options(mode)) as client:
+    guard = WebGuard(simulate_timeout)
+    result = None
+    async with ClaudeSDKClient(options=build_options(mode, guard)) as client:
         await client.query(request)
         async for message in client.receive_response():
             if isinstance(message, AssistantMessage):
@@ -78,10 +81,15 @@ async def research(request, mode="paralelo"):
                 print(f"\nCoordenador: {message.result}")
                 result = message
 
+    coverage = coverage_section(progress.searches, guard.timed_out)
     reports = progress.outputs.get("sintetizador")
     if reports:
-        print(f"\n{reports[-1]}\n")
-        print(f"relatório salvo em {save_report(reports[-1])}")
-        check_sources(reports[-1], progress.all_findings())
+        report = add_coverage(reports[-1], coverage)
+        print(f"\n{report}\n")
+        print(f"relatório salvo em {save_report(report)}")
+        check_sources(report, progress.all_findings())
+    else:
+        print(f"\nSem relatório: o sintetizador não terminou.\n\n{coverage}\n")
     progress.show_timing()
-    print_cost(result)
+    if result:
+        print_cost(result)

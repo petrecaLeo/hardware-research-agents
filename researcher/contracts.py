@@ -1,9 +1,10 @@
 import json
 
 ITEM_KEYS = {"claim", "quote", "url", "published_at"}
+ERROR_KEYS = {"attempted", "failed", "retryable"}
 # Campos que cada subagente tem que devolver, e onde ficam os itens com fonte.
 CONTRACTS = {
-    "busca": ({"part", "findings", "gaps"}, "findings"),
+    "busca": ({"part", "findings", "gaps", "error"}, "findings"),
     "analista": ({"criteria", "rows", "conflicts", "gaps"}, "rows"),
 }
 
@@ -24,6 +25,9 @@ def problems(agent_type, text):
     if not isinstance(data, dict) or not fields <= data.keys():
         return [f"o objeto precisa dos campos {sorted(fields)}"]
     found = []
+    error = data.get("error")
+    if error is not None and (not isinstance(error, dict) or not ERROR_KEYS <= error.keys()):
+        found.append(f"error precisa ser null ou ter {sorted(ERROR_KEYS)}")
     for i, item in enumerate(data[items_field]):
         if not isinstance(item, dict) or not ITEM_KEYS <= item.keys():
             found.append(f"{items_field}[{i}] precisa de {sorted(ITEM_KEYS)}")

@@ -14,6 +14,7 @@ class Progress:
     def __init__(self):
         self.tasks = {}  # id da chamada Agent -> (tipo do subagente, descrição, início)
         self.outputs = {}  # tipo do subagente -> textos devolvidos
+        self.searches = []  # (descrição, agent_id, texto) de cada busca, com ou sem erro
         self.search_durations = []
         self.search_start = self.search_end = None
 
@@ -54,14 +55,18 @@ class Progress:
         if tool_use_id not in self.tasks:
             return
         agent, description, start = self.tasks[tool_use_id]
+        seconds = time.monotonic() - start
         if isinstance(result, dict):
             text = "".join(part.get("text", "") for part in result.get("content", []))
+            agent_id = result.get("agentId")
+            self.outputs.setdefault(agent, []).append(text)
+            print(f"[{agent}: {description}] terminou em {seconds:.0f} s")
         else:
-            text = str(result)
-        self.outputs.setdefault(agent, []).append(text)
-        seconds = time.monotonic() - start
-        print(f"[{agent}: {description}] terminou em {seconds:.0f} s")
+            # Quando o subagente cai (por exemplo, erro da API), o resultado é só a mensagem de erro.
+            text, agent_id = str(result), None
+            print(f"[{agent}: {description}] falhou em {seconds:.0f} s: {text[:200]}")
         if agent == "busca":
+            self.searches.append((description, agent_id, text))
             self.search_durations.append(seconds)
             self.search_end = time.monotonic()
 

@@ -9,7 +9,7 @@ flowchart LR
     B -- "achados ou erro" --> C
     C -- "2. achados de todas as peças" --> A[Analista]
     A -- "tabela, conflitos, lacunas" --> C
-    C -- "3. tudo + cobertura" --> S[Sintetizador]
+    C -- "3. análise + buscas que falharam" --> S[Sintetizador]
     S -- "relatório" --> C
     C --> R([relatorios/])
     B -. "WebSearch, WebFetch" .-> W[(Internet)]
@@ -24,7 +24,7 @@ Todo subagente começa do zero: não vê a conversa do coordenador. O que ele pr
 ### Coordenador
 
 - **Recebe:** o pedido do usuário, em texto livre.
-- **Faz:** separa as peças, manda uma busca por peça ao mesmo tempo, passa os achados ao analista e depois tudo ao sintetizador. Se uma busca falhar ou o analista apontar uma lacuna, pode pedir no máximo uma busca extra.
+- **Faz:** separa as peças, manda uma busca por peça ao mesmo tempo, passa os achados ao analista e depois a análise ao sintetizador. Se uma busca falhar, segue com as outras peças, sem repetir a busca.
 - **Ferramentas:** só a de chamar subagente (`Agent`). Mais tarde, ler e escrever o arquivo de rascunho.
 - **Devolve:** o relatório final. Quem salva em `relatorios/` é o script, não o agente.
 
@@ -33,8 +33,8 @@ Todo subagente começa do zero: não vê a conversa do coordenador. O que ele pr
 Uma definição só, chamada uma vez por peça.
 
 - **Recebe:** a peça, o uso, o orçamento, a data de hoje e o que procurar (especificações, consumo, preço em reais, desempenho no uso pedido).
-- **Ferramentas:** `WebSearch` e `WebFetch`, com no máximo 3 buscas.
-- **Devolve:** um objeto JSON com `part` (a peça), `findings` (os achados) e `gaps` (o que procurou e não achou). Cada achado tem:
+- **Ferramentas:** `WebSearch` e `WebFetch`, com no máximo 3 buscas e 90 segundos.
+- **Devolve:** um objeto JSON com `part` (a peça), `findings` (os achados), `gaps` (o que procurou e não achou) e `error`. Cada achado tem:
 
   | Campo | O que é |
   |---|---|
@@ -43,7 +43,7 @@ Uma definição só, chamada uma vez por peça.
   | `url` | o endereço da fonte |
   | `published_at` | a data de publicação da fonte, ou `null` se a página não mostra |
 
-  Se der errado, devolve um erro: `attempted` (o que tentou), `failed` (o que falhou) e `retryable` (se dá para tentar de novo).
+  `error` é `null` quando deu tudo certo. Quando uma falha deixou parte do pedido sem pesquisar, traz `attempted` (o que tentou), `failed` (o que falhou) e `retryable` (se dá para tentar de novo), e a busca devolve junto os achados que já tinha. Lacuna e erro são coisas diferentes: lacuna é "pesquisei e não achei"; erro é "não consegui pesquisar".
 
 ### Analista
 
@@ -53,9 +53,9 @@ Uma definição só, chamada uma vez por peça.
 
 ### Sintetizador
 
-- **Recebe:** o uso, o orçamento e o JSON do analista, em que cada valor já traz a sua fonte. Mais tarde, também a cobertura de cada busca.
+- **Recebe:** o uso, o orçamento, o JSON do analista, em que cada valor já traz a sua fonte, e as buscas que falharam.
 - **Ferramentas:** nenhuma.
-- **Devolve:** o relatório em Markdown: recomendação para o uso pedido, tabela, achados "confirmados" e "em disputa" (cada um com fonte e data), cobertura por peça e lista de fontes.
+- **Devolve:** o relatório em Markdown: recomendação para o uso pedido, tabela, achados "confirmados" e "em disputa" (cada um com fonte e data) e lista de fontes. A seção de cobertura por peça quem acrescenta é o script.
 
 ## Decisões
 
@@ -64,6 +64,7 @@ Uma definição só, chamada uma vez por peça.
 - **A ordem é fixa:** busca, análise, síntese. O coordenador decide o que fazer quando uma busca falha ou falta um dado.
 - **O formato é exigido pelo código, não só pedido no prompt.** Um hook confere o JSON da busca e do analista antes de eles terminarem e, se faltar campo, url ou trecho, devolve os problemas para o subagente corrigir (uma vez).
 - **O script confere o que o modelo não garante:** quantos trechos o coordenador repassou inteiros de um agente para o outro e se algum link do relatório não veio das buscas.
+- **Uma falha não para a pesquisa nem passa em silêncio.** A busca resolve sozinha o que der (outra fonte, por exemplo) e devolve um erro estruturado quando não consegue. O coordenador segue com as outras peças. O relatório ganha uma seção de cobertura por peça ("cobertura completa", "parcial: ..." ou "sem dados: ..."), escrita pelo script a partir do que aconteceu: tempo esgotado no guarda, campo `error` da busca e os avisos do Claude Code quando um subagente cai por erro da API ou para no limite de voltas. Assim a cobertura não depende de o modelo lembrar de anotar a falha.
 - **Todos os agentes usam o Claude Haiku 5.5**, o modelo mais barato.
 - **O relatório sai em português**, com preço em reais. A busca pode usar fontes em inglês para especificações e testes.
 
