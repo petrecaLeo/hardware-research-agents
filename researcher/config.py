@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
+REPORTS_DIR = ROOT_DIR / "relatorios"
 
 load_dotenv(ROOT_DIR / ".env")
 
@@ -20,7 +21,9 @@ WEB_SEARCH_PRICE = 0.01
 TOOL_LIMITS = {"WebSearch": 3, "WebFetch": 4}
 COORDINATOR_MAX_TURNS = 8
 SEARCH_MAX_TURNS = 10
-MAX_BUDGET_USD = 0.25
+# Analista e sintetizador respondem numa volta; a segunda é para corrigir o formato.
+ANALYSIS_MAX_TURNS = 3
+MAX_BUDGET_USD = 0.60
 
 ENV = {
     # Chamadas internas do Claude Code, como o resumo da página no WebFetch, também no Haiku 5.5.

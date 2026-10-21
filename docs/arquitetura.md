@@ -34,14 +34,14 @@ Uma definição só, chamada uma vez por peça.
 
 - **Recebe:** a peça, o uso, o orçamento, a data de hoje e o que procurar (especificações, consumo, preço em reais, desempenho no uso pedido).
 - **Ferramentas:** `WebSearch` e `WebFetch`, com no máximo 3 buscas.
-- **Devolve:** uma lista de achados:
+- **Devolve:** um objeto JSON com `part` (a peça), `findings` (os achados) e `gaps` (o que procurou e não achou). Cada achado tem:
 
   | Campo | O que é |
   |---|---|
   | `claim` | a afirmação, em uma frase |
   | `quote` | o trecho da fonte que sustenta a afirmação |
   | `url` | o endereço da fonte |
-  | `published_at` | a data de publicação da fonte |
+  | `published_at` | a data de publicação da fonte, ou `null` se a página não mostra |
 
   Se der errado, devolve um erro: `attempted` (o que tentou), `failed` (o que falhou) e `retryable` (se dá para tentar de novo).
 
@@ -49,11 +49,11 @@ Uma definição só, chamada uma vez por peça.
 
 - **Recebe:** os achados de todas as peças, o uso e o orçamento.
 - **Ferramentas:** nenhuma.
-- **Devolve:** uma tabela peça × critério, com cada valor ligado ao achado de onde veio, a lista de conflitos (fontes que discordam) e a de lacunas (dados que faltaram).
+- **Devolve:** um objeto JSON com `criteria` (de 4 a 6 critérios, sempre com o preço), `rows` (uma linha por peça e critério, com o valor e os quatro campos do achado de onde veio), `conflicts` (fontes que discordam, com todos os valores) e `gaps` (dados que faltaram).
 
 ### Sintetizador
 
-- **Recebe:** a tabela, os conflitos, as lacunas, os achados e a cobertura de cada busca.
+- **Recebe:** o uso, o orçamento e o JSON do analista, em que cada valor já traz a sua fonte. Mais tarde, também a cobertura de cada busca.
 - **Ferramentas:** nenhuma.
 - **Devolve:** o relatório em Markdown: recomendação para o uso pedido, tabela, achados "confirmados" e "em disputa" (cada um com fonte e data), cobertura por peça e lista de fontes.
 
@@ -62,6 +62,8 @@ Uma definição só, chamada uma vez por peça.
 - **Só a busca acessa a internet.** Analista e sintetizador trabalham só com o que recebem, então toda afirmação do relatório volta a uma fonte.
 - **O coordenador não busca nem escreve o relatório.** Se pudesse, faria tudo sozinho e a divisão perderia o sentido.
 - **A ordem é fixa:** busca, análise, síntese. O coordenador decide o que fazer quando uma busca falha ou falta um dado.
+- **O formato é exigido pelo código, não só pedido no prompt.** Um hook confere o JSON da busca e do analista antes de eles terminarem e, se faltar campo, url ou trecho, devolve os problemas para o subagente corrigir (uma vez).
+- **O script confere o que o modelo não garante:** quantos trechos o coordenador repassou inteiros de um agente para o outro e se algum link do relatório não veio das buscas.
 - **Todos os agentes usam o Claude Haiku 5.5**, o modelo mais barato.
 - **O relatório sai em português**, com preço em reais. A busca pode usar fontes em inglês para especificações e testes.
 
