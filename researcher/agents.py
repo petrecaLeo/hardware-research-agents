@@ -10,7 +10,6 @@ def load_prompt(name):
 
 
 # A description é o que o coordenador lê para decidir quando chamar cada subagente.
-# Analista e sintetizador só têm o Read: leem os arquivos da pesquisa e não acessam a internet.
 AGENTS = {
     "busca": AgentDefinition(
         description=(

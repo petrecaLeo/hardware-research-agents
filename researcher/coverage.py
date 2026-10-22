@@ -9,6 +9,7 @@ CLAUDE_CODE_NOTES = {
 
 # A cobertura sai do que aconteceu (tempo esgotado no guarda, aviso do Claude Code, campo error),
 # não só do que o modelo escreveu: falha que ninguém anota some do relatório.
+# Devolve a peça, o status ("ok", "partial" ou "failed") e o texto da cobertura.
 def search_coverage(description, agent_id, text, timed_out):
     try:
         data = parse_json(text)
@@ -26,11 +27,12 @@ def search_coverage(description, agent_id, text, timed_out):
     elif not data:
         reason, retryable = "resposta fora do formato", False
     else:
-        return part, "cobertura completa"
-    label = f"{'parcial' if data.get('findings') else 'sem dados'}: {reason}"
-    return part, label + (" (dá para tentar de novo)" if retryable else "")
+        return part, "ok", "cobertura completa"
+    status = "partial" if data.get("findings") else "failed"
+    label = f"{'parcial' if status == 'partial' else 'sem dados'}: {reason}"
+    return part, status, label + (" (dá para tentar de novo)" if retryable else "")
 
 
 def coverage_section(searches, timed_out):
-    lines = [f"- {part}: {label}" for part, label in (search_coverage(*s, timed_out) for s in searches)]
+    lines = [f"- {part}: {label}" for part, _, label in (search_coverage(*s, timed_out) for s in searches)]
     return "## Cobertura\n\n" + ("\n".join(lines) or "Nenhuma busca rodou.")

@@ -2,6 +2,7 @@ import argparse
 import asyncio
 
 from researcher.coordinator import research
+from researcher.terminal import print_event
 
 EXAMPLE = (
     "Compare as placas de vídeo RTX 5060, RX 9060 XT 8 GB e Arc B580 para jogar em 1440p. "
@@ -19,4 +20,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     mode = "sequencial" if args.sequencial else "paralelo"
-    asyncio.run(research(args.pedido, mode, args.simular_timeout))
+    asyncio.run(research(args.pedido, print_event, mode, args.simular_timeout))

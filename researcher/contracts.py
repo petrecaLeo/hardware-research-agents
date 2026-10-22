@@ -53,34 +53,28 @@ def split_problems(data):
     return found
 
 
-def items(text, field):
+def findings(text):
     try:
-        return [item for item in parse_json(text)[field] if isinstance(item, dict) and item.get("quote")]
+        return [item for item in parse_json(text)["findings"] if isinstance(item, dict) and item.get("quote")]
     except (ValueError, KeyError, TypeError):
         return []
 
 
-def findings(text):
-    return items(text, "findings")
-
-
-def rows(text):
-    return items(text, "rows")
-
-
 # SubagentStop: antes de a busca ou o analista terminar, confere se a resposta segue o contrato.
 # Se não seguir, o subagente recebe a lista de problemas e tenta de novo, uma vez só.
-async def enforce_contract(input_data, tool_use_id, context):
+# O emit chega pelo functools.partial no coordenador.
+async def enforce_contract(emit, input_data, tool_use_id, context):
     agent_type = input_data["agent_type"]
     if agent_type not in CONTRACTS:
         return {}
     found = problems(agent_type, input_data.get("last_assistant_message", ""))
     if not found:
         return {}
-    if input_data["stop_hook_active"]:
-        print(f"    [contrato] {agent_type} continua fora do formato: {found[:3]}")
+    retrying = not input_data["stop_hook_active"]
+    situation = "fora do formato, pedindo correção" if retrying else "continua fora do formato"
+    emit({"type": "notice", "source": "contrato", "text": f"{agent_type} {situation}: {found[:3]}"})
+    if not retrying:
         return {}
-    print(f"    [contrato] {agent_type} fora do formato, pedindo correção: {found[:3]}")
     return {
         "decision": "block",
         "reason": "Sua resposta não segue o formato pedido: " + "; ".join(found[:5]) + ". Devolva só o JSON corrigido.",
