@@ -33,6 +33,23 @@ def problems(agent_type, text):
             found.append(f"{items_field}[{i}] precisa de {sorted(ITEM_KEYS)}")
         elif not str(item["url"]).startswith("http") or not item["quote"]:
             found.append(f"{items_field}[{i}] precisa de url e de trecho citado")
+    if agent_type == "analista":
+        found += split_problems(data)
+    return found
+
+
+# Cada peça e critério fica num lugar só: confirmado (rows), em disputa (conflicts) ou sem dado (gaps).
+def split_problems(data):
+    found = []
+    confirmed = {(r.get("part"), r.get("criterion")) for r in data["rows"] if isinstance(r, dict)}
+    for i, conflict in enumerate(data["conflicts"]):
+        values = conflict.get("values", []) if isinstance(conflict, dict) else []
+        if len(values) < 2:
+            found.append(f"conflicts[{i}] precisa de pelo menos dois valores")
+        elif not all(isinstance(v, dict) and str(v.get("url")).startswith("http") and v.get("quote") for v in values):
+            found.append(f"conflicts[{i}]: cada valor precisa de url e de trecho citado")
+        if isinstance(conflict, dict) and (conflict.get("part"), conflict.get("criterion")) in confirmed:
+            found.append(f"conflicts[{i}] também está em rows: um valor em disputa não entra em rows")
     return found
 
 

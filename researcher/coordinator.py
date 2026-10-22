@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from claude_agent_sdk import (
     AssistantMessage,
@@ -12,15 +12,17 @@ from claude_agent_sdk import (
 )
 
 from .agents import AGENTS, load_prompt
-from .config import COORDINATOR_MAX_TURNS, ENV, MAX_BUDGET_USD, MODEL
+from .config import COORDINATOR_MAX_TURNS, ENV, MAX_BUDGET_USD, MODEL, REPORTS_DIR, ROOT_DIR
 from .contracts import enforce_contract
 from .cost import print_cost
 from .coverage import coverage_section
 from .guards import WebGuard
+from .handoff import Handoff
 from .progress import Progress
-from .report import add_coverage, check_sources, save_report
+from .report import add_coverage, check_disputes, check_sources, save_report
 
 WEB_TOOLS = ["WebSearch", "WebFetch"]
+FILE_TOOLS = ["Read", "Write", "Edit"]
 SEARCH_MODES = {
     "paralelo": (
         'chame o agente "busca" para todas as peças na mesma resposta, com várias chamadas Agent de uma vez, '
@@ -30,20 +32,22 @@ SEARCH_MODES = {
 }
 
 
-def build_options(mode, guard):
+def build_options(mode, guard, handoff):
     system_prompt = (
         load_prompt("coordinator")
-        .replace("{hoje}", f"{date.today():%d/%m/%Y}")
         .replace("{modo_busca}", SEARCH_MODES[mode])
+        .replace("{pasta}", str(handoff.run_dir))
+        .replace("{rascunho}", str(handoff.scratchpad))
     )
     return ClaudeAgentOptions(
         model=MODEL,
         system_prompt=system_prompt,
         agents=AGENTS,
-        # As ferramentas de internet precisam existir na sessão para a busca herdar;
-        # o guarda impede o coordenador de usá-las.
-        tools=["Agent", *WEB_TOOLS],
-        allowed_tools=["Agent", *WEB_TOOLS],
+        # As ferramentas precisam existir na sessão para os subagentes herdarem.
+        # Os hooks impedem o coordenador de usar a internet e limitam os arquivos à pasta da pesquisa.
+        tools=["Agent", *WEB_TOOLS, *FILE_TOOLS],
+        allowed_tools=["Agent", *WEB_TOOLS, *FILE_TOOLS],
+        cwd=ROOT_DIR,
         # Sem modo explícito, o Claude Code passa cada chamada Agent por um classificador de segurança no Sonnet.
         permission_mode="default",
         setting_sources=[],
@@ -53,18 +57,25 @@ def build_options(mode, guard):
         max_budget_usd=MAX_BUDGET_USD,
         env=ENV,
         hooks={
-            "PreToolUse": [HookMatcher(matcher="|".join(WEB_TOOLS), hooks=[guard.check])],
-            "SubagentStop": [HookMatcher(hooks=[enforce_contract])],
+            "PreToolUse": [
+                HookMatcher(matcher="|".join(WEB_TOOLS), hooks=[guard.check]),
+                HookMatcher(matcher="|".join(FILE_TOOLS), hooks=[handoff.limit_files]),
+            ],
+            "PostToolUse": [HookMatcher(matcher="Agent|Task", hooks=[handoff.summarize])],
+            "SubagentStop": [HookMatcher(hooks=[enforce_contract, handoff.save])],
         },
     )
 
 
 async def research(request, mode="paralelo", simulate_timeout=False):
-    print(f"Pedido: {request}\nBuscas: {mode}\n")
-    progress = Progress()
+    run_dir = REPORTS_DIR / f"{datetime.now():%Y-%m-%d-%H%M%S}"
+    run_dir.mkdir(parents=True)
+    print(f"Pedido: {request}\nBuscas: {mode}\nPasta: {run_dir}\n")
+    handoff = Handoff(run_dir)
+    progress = Progress(handoff.texts)
     guard = WebGuard(simulate_timeout)
     result = None
-    async with ClaudeSDKClient(options=build_options(mode, guard)) as client:
+    async with ClaudeSDKClient(options=build_options(mode, guard, handoff)) as client:
         await client.query(request)
         async for message in client.receive_response():
             if isinstance(message, AssistantMessage):
@@ -86,8 +97,9 @@ async def research(request, mode="paralelo", simulate_timeout=False):
     if reports:
         report = add_coverage(reports[-1], coverage)
         print(f"\n{report}\n")
-        print(f"relatório salvo em {save_report(report)}")
+        print(f"relatório salvo em {save_report(run_dir, report)}")
         check_sources(report, progress.all_findings())
+        check_disputes(report, progress.outputs.get("analista", [""])[-1])
     else:
         print(f"\nSem relatório: o sintetizador não terminou.\n\n{coverage}\n")
     progress.show_timing()

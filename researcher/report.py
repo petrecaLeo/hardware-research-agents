@@ -1,7 +1,6 @@
 import re
-from datetime import datetime
 
-from .config import REPORTS_DIR
+from .contracts import parse_json
 
 URL = re.compile(r"https?://[^\s)\]>\"'|]+")
 
@@ -13,11 +12,21 @@ def add_coverage(report, coverage):
     return f"{report.rstrip()}\n\n{coverage}\n"
 
 
-def save_report(text):
-    REPORTS_DIR.mkdir(exist_ok=True)
-    path = REPORTS_DIR / f"{datetime.now():%Y-%m-%d-%H%M%S}.md"
+def save_report(run_dir, text):
+    path = run_dir / "relatorio.md"
     path.write_text(text, encoding="utf-8")
     return path
+
+
+# Todo conflito da análise tem que chegar ao relatório, um item por conflito na seção "Em disputa".
+def check_disputes(report, analysis):
+    try:
+        expected = len(parse_json(analysis)["conflicts"])
+    except (ValueError, KeyError, TypeError):
+        return
+    section = report.split("## Em disputa", 1)[1].split("\n## ", 1)[0] if "## Em disputa" in report else ""
+    listed = len(re.findall(r"^- \*\*", section, re.MULTILINE))
+    print(f"em disputa: {expected} na análise, {listed} no relatório")
 
 
 # Todo link do relatório tem que ter vindo de uma busca. Link de fora foi inventado no caminho.

@@ -21,10 +21,11 @@ WEB_SEARCH_PRICE = 0.01
 TOOL_LIMITS = {"WebSearch": 3, "WebFetch": 4}
 # Depois disso a busca perde o acesso à internet e responde com o que tem. As buscas reais levam de 30 a 45 s.
 SEARCH_TIMEOUT_S = 90
-COORDINATOR_MAX_TURNS = 8
+# O coordenador gasta voltas também para anotar o rascunho.
+COORDINATOR_MAX_TURNS = 14
 SEARCH_MAX_TURNS = 10
-# Analista e sintetizador respondem numa volta; a segunda é para corrigir o formato.
-ANALYSIS_MAX_TURNS = 3
+# Analista e sintetizador leem os arquivos numa volta e respondem na seguinte; a terceira é para corrigir o formato.
+ANALYSIS_MAX_TURNS = 4
 MAX_BUDGET_USD = 0.60
 
 ENV = {

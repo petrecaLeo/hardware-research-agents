@@ -6,13 +6,25 @@ Um coordenador e três tipos de subagente. Os subagentes não conversam entre si
 flowchart LR
     U([Pedido]) --> C[Coordenador]
     C -- "1. peça, uso, orçamento, data" --> B["Busca<br/>(uma por peça, em paralelo)"]
-    B -- "achados ou erro" --> C
-    C -- "2. achados de todas as peças" --> A[Analista]
-    A -- "tabela, conflitos, lacunas" --> C
-    C -- "3. análise + buscas que falharam" --> S[Sintetizador]
+    B -- "resumo + caminho do arquivo" --> C
+    C -- "2. caminhos das buscas" --> A[Analista]
+    A -- "resumo + caminho do arquivo" --> C
+    C -- "3. caminho da análise + buscas que falharam" --> S[Sintetizador]
     S -- "relatório" --> C
-    C --> R([relatorios/])
     B -. "WebSearch, WebFetch" .-> W[(Internet)]
+    B -. "o script salva o JSON" .-> F[("Pasta da pesquisa")]
+    A -. "lê e o script salva o JSON" .-> F
+    S -. "lê" .-> F
+    C -. "rascunho.md" .-> F
+```
+
+Cada pesquisa ganha uma pasta em `relatorios/<data-hora>/`:
+
+```
+rascunho.md          o progresso, anotado pelo coordenador
+buscas/1-<peça>.json o que cada busca devolveu
+analise.json         o que o analista devolveu
+relatorio.md         o relatório final, com a seção de cobertura
 ```
 
 Exemplo de pedido: "RTX 5060 x RX 9060 XT x Arc B580, jogos em 1440p, até R$ 2.500".
@@ -24,8 +36,8 @@ Todo subagente começa do zero: não vê a conversa do coordenador. O que ele pr
 ### Coordenador
 
 - **Recebe:** o pedido do usuário, em texto livre.
-- **Faz:** separa as peças, manda uma busca por peça ao mesmo tempo, passa os achados ao analista e depois a análise ao sintetizador. Se uma busca falhar, segue com as outras peças, sem repetir a busca.
-- **Ferramentas:** só a de chamar subagente (`Agent`). Mais tarde, ler e escrever o arquivo de rascunho.
+- **Faz:** separa as peças, manda uma busca por peça ao mesmo tempo, passa os caminhos dos arquivos das buscas ao analista e depois o da análise ao sintetizador. Se uma busca falhar, segue com as outras peças, sem repetir a busca. Anota o progresso em `rascunho.md` depois de cada etapa.
+- **Ferramentas:** `Agent`, para chamar os subagentes, e `Read`, `Write` e `Edit`, só no `rascunho.md`.
 - **Devolve:** o relatório final. Quem salva em `relatorios/` é o script, não o agente.
 
 ### Busca
@@ -47,23 +59,30 @@ Uma definição só, chamada uma vez por peça.
 
 ### Analista
 
-- **Recebe:** os achados de todas as peças, o uso e o orçamento.
-- **Ferramentas:** nenhuma.
-- **Devolve:** um objeto JSON com `criteria` (de 4 a 6 critérios, sempre com o preço), `rows` (uma linha por peça e critério, com o valor e os quatro campos do achado de onde veio), `conflicts` (fontes que discordam, com todos os valores) e `gaps` (dados que faltaram).
+- **Recebe:** o pedido do usuário e os caminhos dos arquivos das buscas.
+- **Ferramentas:** `Read`, só na pasta da pesquisa.
+- **Devolve:** um objeto JSON com `criteria` (de 4 a 6 critérios, sempre com o preço) e três grupos. Cada peça e critério fica em um grupo só:
+  - `rows`, **confirmado**: um valor que nenhum achado contradiz, com os quatro campos do achado de onde veio;
+  - `conflicts`, **em disputa**: achados que dão valores diferentes para a mesma coisa, com todos os valores, cada um com trecho, fonte e data;
+  - `gaps`, **sem dado**: nenhum achado cobre.
+
+  Valores que medem coisas diferentes (TDP oficial × consumo medido) não estão em disputa: viram critérios separados. Preço de lojas diferentes também não. Preço de datas diferentes, sim, e a data de cada um ajuda a explicar a diferença.
 
 ### Sintetizador
 
-- **Recebe:** o uso, o orçamento, o JSON do analista, em que cada valor já traz a sua fonte, e as buscas que falharam.
-- **Ferramentas:** nenhuma.
-- **Devolve:** o relatório em Markdown: recomendação para o uso pedido, tabela, achados "confirmados" e "em disputa" (cada um com fonte e data) e lista de fontes. A seção de cobertura por peça quem acrescenta é o script.
+- **Recebe:** o pedido do usuário, o caminho da análise e as buscas que falharam.
+- **Ferramentas:** `Read`, só na pasta da pesquisa.
+- **Devolve:** o relatório em Markdown, com as seções Recomendação, Confirmado (uma tabela só com os valores confirmados), Em disputa (todos os valores, cada um com fonte e data), Lacunas e Fontes. Cada fonte traz a data de publicação ou, se a página não mostra, a data da consulta. A seção de cobertura por peça quem acrescenta é o script.
 
 ## Decisões
 
 - **Só a busca acessa a internet.** Analista e sintetizador trabalham só com o que recebem, então toda afirmação do relatório volta a uma fonte.
 - **O coordenador não busca nem escreve o relatório.** Se pudesse, faria tudo sozinho e a divisão perderia o sentido.
 - **A ordem é fixa:** busca, análise, síntese. O coordenador decide o que fazer quando uma busca falha ou falta um dado.
-- **O formato é exigido pelo código, não só pedido no prompt.** Um hook confere o JSON da busca e do analista antes de eles terminarem e, se faltar campo, url ou trecho, devolve os problemas para o subagente corrigir (uma vez).
-- **O script confere o que o modelo não garante:** quantos trechos o coordenador repassou inteiros de um agente para o outro e se algum link do relatório não veio das buscas.
+- **O formato é exigido pelo código, não só pedido no prompt.** Um hook confere o JSON da busca e do analista antes de eles terminarem. Se faltar campo, url ou trecho, ou se o mesmo critério estiver confirmado e em disputa ao mesmo tempo, devolve os problemas para o subagente corrigir (uma vez).
+- **Os resultados passam por arquivo, não pela conversa.** Quando o coordenador copiava os JSON de um agente para o outro, ele perdia campos e trechos no caminho, mesmo dizendo que tinha copiado tudo. Agora o script salva o que a busca e o analista devolvem, e um hook troca a resposta inteira por um resumo com o caminho do arquivo. O coordenador não tem o que copiar, e a conversa dele fica curta.
+- **O coordenador anota o progresso num rascunho.** O `rascunho.md` guarda o pedido, o plano, os arquivos de cada etapa e o que falhou. Se a conversa do coordenador for resumida para caber no contexto, o estado continua no arquivo. Ele também mostra, depois, o que o coordenador entendeu em cada etapa.
+- **O script confere o que o modelo não garante:** se algum link do relatório não veio das buscas e se todo item em disputa da análise chegou ao relatório.
 - **Uma falha não para a pesquisa nem passa em silêncio.** A busca resolve sozinha o que der (outra fonte, por exemplo) e devolve um erro estruturado quando não consegue. O coordenador segue com as outras peças. O relatório ganha uma seção de cobertura por peça ("cobertura completa", "parcial: ..." ou "sem dados: ..."), escrita pelo script a partir do que aconteceu: tempo esgotado no guarda, campo `error` da busca e os avisos do Claude Code quando um subagente cai por erro da API ou para no limite de voltas. Assim a cobertura não depende de o modelo lembrar de anotar a falha.
 - **Todos os agentes usam o Claude Haiku 5.5**, o modelo mais barato.
 - **O relatório sai em português**, com preço em reais. A busca pode usar fontes em inglês para especificações e testes.

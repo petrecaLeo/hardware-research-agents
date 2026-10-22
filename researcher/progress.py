@@ -1,8 +1,7 @@
-import json
 import time
 from textwrap import indent
 
-from .contracts import findings, rows
+from .contracts import findings
 
 # A ferramenta que chama subagentes se chamava "Task" até o Claude Code 2.1.63; hoje é "Agent".
 AGENT_TOOLS = {"Agent", "Task"}
@@ -11,7 +10,8 @@ AGENT_TOOLS = {"Agent", "Task"}
 class Progress:
     """Mostra o que cada agente faz e guarda o que cada subagente devolveu."""
 
-    def __init__(self):
+    def __init__(self, full_texts):
+        self.full_texts = full_texts  # agent_id -> resposta completa, antes de virar resumo para o coordenador
         self.tasks = {}  # id da chamada Agent -> (tipo do subagente, descrição, início)
         self.outputs = {}  # tipo do subagente -> textos devolvidos
         self.searches = []  # (descrição, agent_id, texto) de cada busca, com ou sem erro
@@ -27,38 +27,26 @@ class Progress:
             agent, prompt = block.input.get("subagent_type"), block.input.get("prompt", "")
             self.tasks[block.id] = (agent, block.input.get("description", ""), time.monotonic())
             print(f"[coordenador -> {agent}] {block.input.get('description', '')}")
+            print(indent(prompt, "    "))
             if agent == "busca":
                 self.search_start = self.search_start or time.monotonic()
-                print(indent(prompt, "    "))
-            elif agent == "analista":
-                self.show_relay(prompt, self.all_findings(), "das buscas")
-            else:
-                self.show_relay(prompt, rows(self.outputs.get("analista", [""])[-1]), "do analista")
         elif parent_id:
             agent, description, _ = self.tasks.get(parent_id, ("subagente", "", 0))
-            detail = block.input.get("query") or block.input.get("url")
+            detail = block.input.get("query") or block.input.get("url") or block.input.get("file_path")
             print(f"    [{agent}: {description}] {block.name}: {detail}")
         else:
-            print(f"[coordenador] {block.name}: {block.input}")
+            print(f"[coordenador] {block.name}: {block.input.get('file_path', block.input)}")
 
-    # O coordenador repassa os achados copiando o texto. Aqui se vê quantos trechos chegaram inteiros.
-    def show_relay(self, prompt, items, origin):
-        kept = sum(
-            1
-            for f in items
-            if f["quote"][:40] in prompt or json.dumps(f["quote"], ensure_ascii=False)[1:41] in prompt
-        )
-        print(f"    pedido com {len(prompt)} caracteres; trechos {origin} repassados: {kept} de {len(items)}")
-
-    # tool_use_result traz a resposta crua do subagente, antes de o coordenador ler e resumir.
+    # O coordenador recebe um resumo; a resposta completa vem do que o script salvou (full_texts).
+    # Sem ela (subagente que caiu ou parou no limite de voltas), vale o que veio no tool_use_result.
     def tool_result(self, tool_use_id, result):
         if tool_use_id not in self.tasks:
             return
         agent, description, start = self.tasks[tool_use_id]
         seconds = time.monotonic() - start
         if isinstance(result, dict):
-            text = "".join(part.get("text", "") for part in result.get("content", []))
             agent_id = result.get("agentId")
+            text = self.full_texts.get(agent_id) or "".join(part.get("text", "") for part in result.get("content", []))
             self.outputs.setdefault(agent, []).append(text)
             print(f"[{agent}: {description}] terminou em {seconds:.0f} s")
         else:

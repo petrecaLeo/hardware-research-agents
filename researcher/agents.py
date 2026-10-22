@@ -1,14 +1,16 @@
+from datetime import date
+
 from claude_agent_sdk import AgentDefinition
 
 from .config import ANALYSIS_MAX_TURNS, MODEL, PROMPTS_DIR, SEARCH_MAX_TURNS
 
 
 def load_prompt(name):
-    return (PROMPTS_DIR / f"{name}.md").read_text(encoding="utf-8")
+    return (PROMPTS_DIR / f"{name}.md").read_text(encoding="utf-8").replace("{hoje}", f"{date.today():%d/%m/%Y}")
 
 
 # A description é o que o coordenador lê para decidir quando chamar cada subagente.
-# Com tools=[] o subagente roda sem ferramenta nenhuma: só lê o pedido e responde.
+# Analista e sintetizador só têm o Read: leem os arquivos da pesquisa e não acessam a internet.
 AGENTS = {
     "busca": AgentDefinition(
         description=(
@@ -21,16 +23,19 @@ AGENTS = {
         maxTurns=SEARCH_MAX_TURNS,
     ),
     "analista": AgentDefinition(
-        description="Compara os achados das buscas por peça e critério e aponta conflitos e lacunas. Não acessa a internet.",
+        description=(
+            "Lê os arquivos das buscas e separa, por peça e critério, o que está confirmado, em disputa e sem dado. "
+            "Não acessa a internet."
+        ),
         prompt=load_prompt("analyst"),
-        tools=[],
+        tools=["Read"],
         model=MODEL,
         maxTurns=ANALYSIS_MAX_TURNS,
     ),
     "sintetizador": AgentDefinition(
-        description="Escreve o relatório final em Markdown a partir da análise. Não acessa a internet.",
+        description="Lê o arquivo da análise e escreve o relatório final em Markdown. Não acessa a internet.",
         prompt=load_prompt("synthesizer"),
-        tools=[],
+        tools=["Read"],
         model=MODEL,
         maxTurns=ANALYSIS_MAX_TURNS,
     ),
