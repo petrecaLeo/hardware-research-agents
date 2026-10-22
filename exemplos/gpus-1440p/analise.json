@@ -1,0 +1,173 @@
+{
+  "criteria": [
+    "Preço à vista no Brasil (R$)",
+    "Memória de vídeo",
+    "Consumo nominal (TDP / board power)",
+    "Consumo medido em jogo",
+    "Desempenho em 1440p",
+    "Fonte recomendada"
+  ],
+  "rows": [
+    {
+      "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+      "criterion": "Preço à vista no Brasil (R$)",
+      "value": "R$ 4.700 (menor preço atual no GPUPrix; loja não identificada no achado)",
+      "claim": "Segundo o GPUPrix, o menor preço atual no Brasil é R$ 4.700, com mediana de 3 meses de R$ 4.140 e mediana de 12 meses de R$ 4.100.",
+      "quote": "Menor preço atual: R$4,700",
+      "url": "https://gpuprix.com/pt/brazil/gpus/geforce-rtx-5060-ti-16gb",
+      "published_at": "2026-10-22"
+    },
+    {
+      "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+      "criterion": "Memória de vídeo",
+      "value": "16 GB GDDR7",
+      "claim": "A RTX 5060 Ti 16 GB tem 4.608 núcleos CUDA e clock boost de até 2.570 MHz, com memória GDDR7 de 16 GB.",
+      "quote": "com 4.608 núcleos CUDA e clock boost de até 2.570 MHz",
+      "url": "https://olhardigital.com.br/2025/05/22/reviews/geforce-rtx-5060-e-5060-ti-veja-as-especificacoes-e-novidades-das-gpus-da-nvidia/",
+      "published_at": "2025-05-22"
+    },
+    {
+      "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+      "criterion": "Consumo nominal (TDP / board power)",
+      "value": "180 W (TDP)",
+      "claim": "A ficha técnica do GPUPrix lista TDP de 180 W, 4.608 núcleos CUDA, 16 GB GDDR7, barramento de 128 bits, 448 GB/s e conector de energia 1x 16-pin.",
+      "quote": "TDP: 180 W",
+      "url": "https://gpuprix.com/pt/brazil/gpus/geforce-rtx-5060-ti-16gb",
+      "published_at": "2026-10-22"
+    },
+    {
+      "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+      "criterion": "Desempenho em 1440p",
+      "value": "78 fps em 1440p (Cyberpunk 2077, ray tracing máximo, DLSS e Frame Generation 2x); 98 fps em média (Spider-Man 2, DLSS)",
+      "claim": "No review da Press Start (MSI 16 GB), com DLSS, o Cyberpunk 2077 com ray tracing no máximo chegou a 78 fps em 1440p com Frame Generation 2x e 140 fps com Multi Frame Generation.",
+      "quote": "Cyberpunk 2077 with full ray tracing hit 78 fps at 1440p with 2x frame generation and 140 fps with multi frame generation.",
+      "url": "https://press-start.com.au/?p=161934",
+      "published_at": "2025-04-19"
+    },
+    {
+      "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+      "criterion": "Fonte recomendada",
+      "value": "600 W ou mais",
+      "claim": "O consumo de energia da RTX 5060 Ti 16 GB é de até 180 W, e a placa exige fonte de 600 W ou mais.",
+      "quote": "Com consumo de energia de até 180 W, requer fontes de alimentação de 600 W ou mais.",
+      "url": "https://olhardigital.com.br/2025/05/22/reviews/geforce-rtx-5060-e-5060-ti-veja-as-especificacoes-e-novidades-das-gpus-da-nvidia/",
+      "published_at": "2025-05-22"
+    },
+    {
+      "part": "AMD Radeon RX 9060 XT 16 GB",
+      "criterion": "Preço à vista no Brasil (R$)",
+      "value": "R$ 3.500 (ASRock Challenger OC, Terabyteshop; menor preço atual no GPUPrix)",
+      "claim": "No GPUPrix (Brasil), o menor preço atual da RX 9060 XT 16 GB é R$ 3.500, na Terabyteshop, com dados atualizados em 22/10/2026.",
+      "quote": "Menor preço atual\" R$3,500 for the ASRock Challenger OC listing; Atualizado pela última vez em 22 de out. de 2026.",
+      "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-9060-xt-16gb",
+      "published_at": null
+    },
+    {
+      "part": "AMD Radeon RX 9060 XT 16 GB",
+      "criterion": "Memória de vídeo",
+      "value": "16 GB",
+      "claim": "No lançamento, a versão de 16 GB custava US$ 349 (a de 8 GB, US$ 299).",
+      "quote": "will cost $299for the 8 GB variant and $349 for the 16 GB variant.",
+      "url": "https://www.notebookcheck.net/AMD-Radeon-RX-9060-XT-official-with-up-to-16-GB-VRAM-and-affordable-price-tag.1021212.0.html",
+      "published_at": "2025-05-21"
+    },
+    {
+      "part": "AMD Radeon RX 9060 XT 16 GB",
+      "criterion": "Consumo nominal (TDP / board power)",
+      "value": "182 W (board power total, até)",
+      "claim": "A placa tem potência total (board power) de até 182 W, segundo a Notebookcheck, e modelos com overclock de fábrica consomem mais.",
+      "quote": "a total board power of up to 182 Watts; OEM-overclocked models will push both values much higher.",
+      "url": "https://www.notebookcheck.net/AMD-Radeon-RX-9060-XT-official-with-up-to-16-GB-VRAM-and-affordable-price-tag.1021212.0.html",
+      "published_at": "2025-05-21"
+    },
+    {
+      "part": "AMD Radeon RX 9060 XT 16 GB",
+      "criterion": "Desempenho em 1440p",
+      "value": "Média de 134 FPS em 10 jogos (1440p), cerca de 5% atrás da RTX 5060 Ti (142 FPS)",
+      "claim": "Em 1440p, a RX 9060 XT 16 GB fica praticamente empatada com a RTX 5060 Ti; a média de 10 jogos foi 134 FPS contra 142 FPS da 5060 Ti (cerca de 5% atrás).",
+      "quote": "Across an average of 10 games, the card averaged 134 FPS at 1440p versus 142 FPS for the RTX 5060 Ti, about 5% behind.",
+      "url": "https://tech.yahoo.com/computing/articles/amd-radeon-rx-9060-xt-164227046.html",
+      "published_at": null
+    },
+    {
+      "part": "AMD Radeon RX 7700 XT 12 GB",
+      "criterion": "Memória de vídeo",
+      "value": "12 GB GDDR6, barramento de 192 bits",
+      "claim": "A placa tem 12 GB de GDDR6 em barramento de 192 bits, arquitetura RDNA 3, Infinity Cache de 2ª geração e interface PCIe 4.0.",
+      "quote": "Memória: 12 GB GDDR6, barramento de 192 bits. Arquitetura: AMD RDNA 3, com novos aceleradores de IA e melhor aceleração de ray tracing. Cache: Infinity Cache de 2ª geração. Interface: PCIe 4.0.",
+      "url": "https://www.cgmagonline.com/review/hardware/radeon-rx-7700-xt-12gb-gpu",
+      "published_at": "2023-09-06"
+    },
+    {
+      "part": "AMD Radeon RX 7700 XT 12 GB",
+      "criterion": "Consumo nominal (TDP / board power)",
+      "value": "245 W (TBP)",
+      "claim": "Consumo: a placa tem 245 W de board power total (TBP) e exige fonte mínima de 700 W, um pouco acima da RTX 4060 Ti.",
+      "quote": "\"the Radeon RX 7700 XT requires a minimum 700W PSU and pulls 245W of total board power to run.\" \"This is a slightly higher requirement than the RTX 4060Ti.\"",
+      "url": "https://www.cgmagonline.com/review/hardware/radeon-rx-7700-xt-12gb-gpu",
+      "published_at": "2023-09-06"
+    },
+    {
+      "part": "AMD Radeon RX 7700 XT 12 GB",
+      "criterion": "Desempenho em 1440p",
+      "value": "Média de 138 fps em 1440p (Sapphire RX 7700 XT PURE, teste único)",
+      "claim": "Em 1440p, a Sapphire PURE fez média de cerca de 138 fps, perto da RTX 4070 FE (147,6 fps) e acima da RTX 4060 Ti 8 GB (115,3 fps), em um único teste.",
+      "quote": "Sapphire RX 7700 XT PURE | 180.9 | 138.0 | 75.5 (1080p | 1440p | 4K, resumo de busca, trecho não verificado na página)",
+      "url": "https://lanoc.org/review/video-cards/8840-sapphire-rx-7700-xt-pure?start=6",
+      "published_at": null
+    },
+    {
+      "part": "AMD Radeon RX 7700 XT 12 GB",
+      "criterion": "Fonte recomendada",
+      "value": "700 W mínimo",
+      "claim": "Consumo: a placa tem 245 W de board power total (TBP) e exige fonte mínima de 700 W, um pouco acima da RTX 4060 Ti.",
+      "quote": "\"the Radeon RX 7700 XT requires a minimum 700W PSU and pulls 245W of total board power to run.\"",
+      "url": "https://www.cgmagonline.com/review/hardware/radeon-rx-7700-xt-12gb-gpu",
+      "published_at": "2023-09-06"
+    }
+  ],
+  "conflicts": [
+    {
+      "part": "AMD Radeon RX 7700 XT 12 GB",
+      "criterion": "Preço à vista no Brasil (R$)",
+      "values": [
+        {
+          "value": "R$ 4.371 (ASRock Challenger 12G OC, Amazon; página atualizada em 21/10/2026)",
+          "quote": "Menor preço atual: R$4,371 (ASRock Challenger 12G OC, Unidade Nova, Amazon). Mínimo em 12 meses: R$2,238. Atualizado pela última vez em 21 de out. de 2026.",
+          "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-7700-xt",
+          "published_at": "2026-10-21"
+        },
+        {
+          "value": "R$ 4.357 (versão da página de 06/07/2026)",
+          "quote": "versão de 06/07/2026 mostrou R$ 4.357",
+          "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-7700-xt",
+          "published_at": null
+        },
+        {
+          "value": "R$ 5.625 (versão da página de 29/08/2026)",
+          "quote": "versão de 29/08/2026 mostrou R$ 5.625",
+          "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-7700-xt",
+          "published_at": null
+        }
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+      "criterion": "Consumo medido em jogo"
+    },
+    {
+      "part": "AMD Radeon RX 9060 XT 16 GB",
+      "criterion": "Consumo medido em jogo"
+    },
+    {
+      "part": "AMD Radeon RX 9060 XT 16 GB",
+      "criterion": "Fonte recomendada"
+    },
+    {
+      "part": "AMD Radeon RX 7700 XT 12 GB",
+      "criterion": "Consumo medido em jogo"
+    }
+  ]
+}

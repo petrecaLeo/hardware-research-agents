@@ -1,0 +1,76 @@
+{
+  "part": "AMD Radeon RX 9060 XT 16 GB",
+  "findings": [
+    {
+      "claim": "A placa tem potência total (board power) de até 182 W, segundo a Notebookcheck, e modelos com overclock de fábrica consomem mais.",
+      "quote": "a total board power of up to 182 Watts; OEM-overclocked models will push both values much higher.",
+      "url": "https://www.notebookcheck.net/AMD-Radeon-RX-9060-XT-official-with-up-to-16-GB-VRAM-and-affordable-price-tag.1021212.0.html",
+      "published_at": "2025-05-21"
+    },
+    {
+      "claim": "No lançamento, a versão de 16 GB custava US$ 349 (a de 8 GB, US$ 299).",
+      "quote": "will cost $299for the 8 GB variant and $349 for the 16 GB variant.",
+      "url": "https://www.notebookcheck.net/AMD-Radeon-RX-9060-XT-official-with-up-to-16-GB-VRAM-and-affordable-price-tag.1021212.0.html",
+      "published_at": "2025-05-21"
+    },
+    {
+      "claim": "No GPUPrix (Brasil), o menor preço atual da RX 9060 XT 16 GB é R$ 3.500, na Terabyteshop, com dados atualizados em 22/10/2026.",
+      "quote": "Menor preço atual\" R$3,500 for the ASRock Challenger OC listing; Atualizado pela última vez em 22 de out. de 2026.",
+      "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-9060-xt-16gb",
+      "published_at": null
+    },
+    {
+      "claim": "No GPUPrix, o menor preço dos últimos 12 meses foi R$ 2.700, e a mediana de 12 meses ficou em R$ 3.496.",
+      "quote": "The page shows a 12-month low of R$2,700 and a 12-month median of R$3,496 (resumo da página, não citação literal)",
+      "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-9060-xt-16gb",
+      "published_at": null
+    },
+    {
+      "claim": "Na busca do Magazine Luiza, o modelo ASRock RX 9060 XT CL 16GO aparecia por R$ 3.157,77 no Pix (resultado de busca, não página aberta).",
+      "quote": "ASRock RX 9060 XT CL 16GO por R$ 3.157,77 no Pix",
+      "url": "https://m.magazineluiza.com.br/busca/rx9060xt+16/",
+      "published_at": null
+    },
+    {
+      "claim": "Em 1440p, a RX 9060 XT 16 GB fica praticamente empatada com a RTX 5060 Ti; a média de 10 jogos foi 134 FPS contra 142 FPS da 5060 Ti (cerca de 5% atrás).",
+      "quote": "Across an average of 10 games, the card averaged 134 FPS at 1440p versus 142 FPS for the RTX 5060 Ti, about 5% behind.",
+      "url": "https://tech.yahoo.com/computing/articles/amd-radeon-rx-9060-xt-164227046.html",
+      "published_at": null
+    },
+    {
+      "claim": "A TechSpot observou desempenho praticamente idêntico ao da RTX 5060 Ti em 1440p.",
+      "quote": "Its testing observed virtually identical performance at 1440p to the RTX 5060 Ti, which it said matched AMD's claim.",
+      "url": "https://www.techspot.com/products/gpu/amd-radeon-rx-9060-xt-16gb.308866/",
+      "published_at": null
+    },
+    {
+      "claim": "A CGMagazine diz que a placa alterna vitórias com a RTX 5060 Ti em 1440p, com os dois muito próximos na maioria dos testes.",
+      "quote": "The card trades blows with the NVIDIA RTX 5060 Ti at 1440p, and the two were close in nearly every benchmark.",
+      "url": "https://www.cgmagonline.com/review/hardware/gigabyte-amd-radeon-rx-9060-xt",
+      "published_at": null
+    }
+  ],
+  "gaps": [
+    "Consumo medido em jogo (teste de wattagem real) não foi encontrado nas fontes lidas; só há o valor nominal de board power.",
+    "Os TDPs de parceiros (Sapphire PURE 170 W, ASUS TUF OC 160 W) e a fonte recomendada de 550 W vieram só de resumos de busca, sem página aberta. Não verificados.",
+    "Especificações detalhadas (32 CUs, 2048 shaders, 16 GB GDDR6 em 128 bits, PCIe 5.0, DisplayPort 2.1a) não foram confirmadas em página aberta: a página da TechSpot retornou 403 e as demais só apareceram em resumos de busca.",
+    "Desempenho por jogo em 1440p com FPS específicos não foi confirmado: as páginas da Tom's Hardware, Guru3D e TechSpot não puderam ser lidas, e os números de 1440p vêm de resumos de busca.",
+    "Preço no Brasil de outras lojas (KaBuM, Pichau, Mercado Livre) não foi verificado em página aberta; os valores da Pichau dependem de um agregador (Escorrega o Preço) não lido.",
+    "Preço da RX 9060 XT 16 GB em reais no Brasil com data de hoje: só há a referência do GPUPrix de 22/10/2026. As demais datas de preço não foram confirmadas.",
+    "Data de publicação do Yahoo, CGMagazine e TechSpot não apareceu nos resultados, então não dá para saber se as reviews são recentes."
+  ],
+  "error": {
+    "attempted": [
+      "WebSearch: especificações e consumo (TDP)",
+      "WebSearch: preço Brasil R$",
+      "WebSearch: review 1440p gaming benchmark",
+      "WebFetch: techspot.com/specs (403)",
+      "WebFetch: gpuprix.com/pt/brazil (ok)",
+      "WebFetch: techspot.com/products (403)",
+      "WebFetch: notebookcheck.net (ok)",
+      "WebFetch: guru3d.com (não lido, limite de WebFetch atingido)"
+    ],
+    "failed": "Limite de WebFetch atingido (4 usos) antes de ler Tom's Hardware, Guru3D e as páginas de consumo de parceiros; duas páginas TechSpot retornaram 403.",
+    "retryable": true
+  }
+}

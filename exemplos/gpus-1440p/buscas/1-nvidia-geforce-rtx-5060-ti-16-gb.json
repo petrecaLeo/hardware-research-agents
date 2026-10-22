@@ -1,0 +1,63 @@
+{
+  "part": "NVIDIA GeForce RTX 5060 Ti 16 GB",
+  "findings": [
+    {
+      "claim": "A RTX 5060 Ti 16 GB tem 4.608 núcleos CUDA e clock boost de até 2.570 MHz, com memória GDDR7 de 16 GB.",
+      "quote": "com 4.608 núcleos CUDA e clock boost de até 2.570 MHz",
+      "url": "https://olhardigital.com.br/2025/05/22/reviews/geforce-rtx-5060-e-5060-ti-veja-as-especificacoes-e-novidades-das-gpus-da-nvidia/",
+      "published_at": "2025-05-22"
+    },
+    {
+      "claim": "O consumo de energia da RTX 5060 Ti 16 GB é de até 180 W, e a placa exige fonte de 600 W ou mais.",
+      "quote": "Com consumo de energia de até 180 W, requer fontes de alimentação de 600 W ou mais.",
+      "url": "https://olhardigital.com.br/2025/05/22/reviews/geforce-rtx-5060-e-5060-ti-veja-as-especificacoes-e-novidades-das-gpus-da-nvidia/",
+      "published_at": "2025-05-22"
+    },
+    {
+      "claim": "A ficha técnica do GPUPrix lista TDP de 180 W, 4.608 núcleos CUDA, 16 GB GDDR7, barramento de 128 bits, 448 GB/s e conector de energia 1x 16-pin.",
+      "quote": "TDP: 180 W",
+      "url": "https://gpuprix.com/pt/brazil/gpus/geforce-rtx-5060-ti-16gb",
+      "published_at": "2026-10-22"
+    },
+    {
+      "claim": "Segundo o GPUPrix, o menor preço atual no Brasil é R$ 4.700, com mediana de 3 meses de R$ 4.140 e mediana de 12 meses de R$ 4.100.",
+      "quote": "Menor preço atual: R$4,700",
+      "url": "https://gpuprix.com/pt/brazil/gpus/geforce-rtx-5060-ti-16gb",
+      "published_at": "2026-10-22"
+    },
+    {
+      "claim": "Em um review de MSI RTX 5060 Ti 16 GB, a placa foi descrita como estando no extremo inferior de consumo da linha 50, com consumo de 180 W.",
+      "quote": "at the low-end of the 50-series GPUs",
+      "url": "https://press-start.com.au/reviews/tech/2025/04/19/msi-geforce-rtx-5060-ti-16gb-gaming-series-review-the-sweet-spot/",
+      "published_at": "2025-04-19"
+    },
+    {
+      "claim": "No review da Press Start (MSI 16 GB), com DLSS, o Cyberpunk 2077 com ray tracing no máximo chegou a 78 fps em 1440p com Frame Generation 2x e 140 fps com Multi Frame Generation.",
+      "quote": "Cyberpunk 2077 with full ray tracing hit 78 fps at 1440p with 2x frame generation and 140 fps with multi frame generation.",
+      "url": "https://press-start.com.au/?p=161934",
+      "published_at": "2025-04-19"
+    },
+    {
+      "claim": "No mesmo review da Press Start, Spider-Man 2 com DLSS ficou em média 98 fps em 1440p, e The Last of Us Part 2 Remastered com DLSS chegou a 121 fps em 1440p.",
+      "quote": "Spider-Man 2 with DLSS averaged 98 fps at 1440p.",
+      "url": "https://press-start.com.au/?p=161934",
+      "published_at": "2025-04-19"
+    },
+    {
+      "claim": "Segundo a Notebookcheck (Edição de valor da GPU Blackwell), a 5060 Ti 16 GB é voltada a 1440p com a VRAM de 16 GB.",
+      "quote": "Para que exatamente a Nvidia GeForce RTX 5060 Ti com 16 GB de VRAM é adequada",
+      "url": "https://notebookcheck.info/Edicao-de-valor-da-GPU-Blackwell-Para-que-exatamente-a-Nvidia-GeForce-RTX-5060-Ti-com-16-GB-de-VRAM-e-adequada.1000775.0.html",
+      "published_at": null
+    }
+  ],
+  "gaps": [
+    "Não encontrei uma média de fps nativa (sem DLSS/frame generation) em 1440p que consolide vários jogos; os números achados usam DLSS ou frame generation.",
+    "Preços em reais de datas diferentes conflitam: GPUPrix (22/10/2026) mostra menor preço de R$ 4.700, mas snapshots de comparadores (Hardware Barato R$ 3.599 à vista, Kabum R$ 3.800 a R$ 3.900, Itx Gamer R$ 3.816,65) não têm data confirmada e não foram verificados nas páginas.",
+    "Preço sugerido da NVIDIA Brasil de R$ 4.099 apareceu na busca, mas não consegui abrir a fonte para confirmar a citação.",
+    "Canaltech (Black Friday 2025) cita preço de cerca de R$ 3.500 e mínimo de R$ 3.095, mas a página não foi aberta para confirmação.",
+    "Consumo real em jogos (medição de watts durante gameplay) não foi encontrado nas páginas lidas; só o TDP nominal de 180 W.",
+    "A página da Press Start não permitiu copiar trechos literais em volume; os números de 1440p vieram do resumo de busca e de um resumo da página, e a data de publicação (19/04/2025) vem da URL.",
+    "Desempenho comparativo 16 GB vs 8 GB em 1440p (PC Componentes) e ganho sobre a RTX 3060 Ti (GamersNexus, 16% a 39%) apareceram só em resumos de busca e não foram verificados nas páginas."
+  ],
+  "error": null
+}

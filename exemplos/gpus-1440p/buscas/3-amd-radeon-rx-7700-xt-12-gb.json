@@ -1,0 +1,72 @@
+{
+  "part": "AMD Radeon RX 7700 XT 12 GB",
+  "findings": [
+    {
+      "claim": "A placa tem 12 GB de GDDR6 em barramento de 192 bits, arquitetura RDNA 3, Infinity Cache de 2ª geração e interface PCIe 4.0.",
+      "quote": "Memória: 12 GB GDDR6, barramento de 192 bits. Arquitetura: AMD RDNA 3, com novos aceleradores de IA e melhor aceleração de ray tracing. Cache: Infinity Cache de 2ª geração. Interface: PCIe 4.0.",
+      "url": "https://www.cgmagonline.com/review/hardware/radeon-rx-7700-xt-12gb-gpu",
+      "published_at": "2023-09-06"
+    },
+    {
+      "claim": "Consumo: a placa tem 245 W de board power total (TBP) e exige fonte mínima de 700 W, um pouco acima da RTX 4060 Ti.",
+      "quote": "\"the Radeon RX 7700 XT requires a minimum 700W PSU and pulls 245W of total board power to run.\" \"This is a slightly higher requirement than the RTX 4060Ti.\"",
+      "url": "https://www.cgmagonline.com/review/hardware/radeon-rx-7700-xt-12gb-gpu",
+      "published_at": "2023-09-06"
+    },
+    {
+      "claim": "A CGMagOnline considera a placa excepcional para 1440p e diz que a maioria dos títulos mantém 60 FPS ou mais.",
+      "quote": "\"The bottom line is that the Radeon RX 7700 XT is an exceptional 1440p card.\" \"With most titles, the Radeon 7700 XT can easily maintain 60 FPS or more.\"",
+      "url": "https://www.cgmagonline.com/review/hardware/radeon-rx-7700-xt-12gb-gpu",
+      "published_at": "2023-09-06"
+    },
+    {
+      "claim": "Preço atual no Brasil: menor preço de R$ 4.371 (ASRock Challenger 12G OC, unidade nova, Amazon), com mínimo em 12 meses de R$ 2.238; a página foi atualizada em 21/10/2026.",
+      "quote": "Menor preço atual: R$4,371 (ASRock Challenger 12G OC, Unidade Nova, Amazon). Mínimo em 12 meses: R$2,238. Atualizado pela última vez em 21 de out. de 2026.",
+      "url": "https://gpuprix.com/pt/brazil/gpus/radeon-rx-7700-xt",
+      "published_at": "2026-10-21"
+    },
+    {
+      "claim": "Em lojas como a Pichau, a placa aparece por volta de R$ 4.117 (XFX) e R$ 4.470 (Gigabyte Gaming OC), segundo agregador de ofertas. Data não informada.",
+      "quote": "um modelo XFX aparece por cerca de R$ 4.117, e um Gigabyte Gaming OC por cerca de R$ 4.470 (resumo de busca, trecho não verificado na página)",
+      "url": "https://www.escorregaopreco.com.br/ofertas/pichau/7528306",
+      "published_at": null
+    },
+    {
+      "claim": "Em 1440p, a Sapphire PURE fez média de cerca de 138 fps, perto da RTX 4070 FE (147,6 fps) e acima da RTX 4060 Ti 8 GB (115,3 fps), em um único teste.",
+      "quote": "Sapphire RX 7700 XT PURE | 180.9 | 138.0 | 75.5 (1080p | 1440p | 4K, resumo de busca, trecho não verificado na página)",
+      "url": "https://lanoc.org/review/video-cards/8840-sapphire-rx-7700-xt-pure?start=6",
+      "published_at": null
+    },
+    {
+      "claim": "Em 15 jogos (rasterização), no TechSpot a 7700 XT fica cerca de 16% atrás da 7800 XT em 1440p e tem 14% mais desempenho médio que a RTX 4060 Ti 16 GB; Hogwarts Legacy média de 67 fps em 1440p.",
+      "quote": "At 1440p, the Radeon 7700 XT lags 16% behind the 7800 XT... (resumo de busca; página do TechSpot bloqueada com HTTP 403, trecho não verificado)",
+      "url": "https://www.techspot.com/review/2735-amd-radeon-rx-7700-xt/",
+      "published_at": null
+    },
+    {
+      "claim": "Especificações do MySmartPrice: 54 CUs, 3.456 stream processors, 48 MB de Infinity Cache, TBP de 245 W; avaliação destaca bom desempenho em 1080p e que o preço fica desproporcional perto da RX 7800 XT.",
+      "quote": "54 unidades de computação, 3.456 stream processors, 48 MB de Infinity Cache, barramento de 192 bits e 12 GB de GDDR6, com TBP de 245 W (resumo de busca; página bloqueada com HTTP 403, trecho não verificado)",
+      "url": "https://www.mysmartprice.com/gear/laptops-pc/laptops-pc-reviews/sapphire-pulse-amd-radeon-rx-7700xt-review/",
+      "published_at": null
+    }
+  ],
+  "gaps": [
+    "Consumo medido em jogos (não só TBP nominal) não encontrado nas fontes acessíveis.",
+    "FPS em 1440p por jogo, com configurações padronizadas, só achei em resumo de busca; as páginas do TechSpot e do MySmartPrice bloquearam o acesso.",
+    "Preço de lojas brasileiras além de Pichau e Amazon via agregadores não foi confirmado em página própria; a faixa recente variou de R$ 4.117 a R$ 5.625 entre datas diferentes no GPUPrix (versão de 29/08/2026 mostrou R$ 5.625; versão de 06/07/2026 mostrou R$ 4.357), sem data de publicação confirmada para as lojas.",
+    "Número de compute units na CGMagOnline não informado; o dado de 54 CUs veio do resumo de busca do MySmartPrice e da Guru3D."
+  ],
+  "error": {
+    "attempted": [
+      "WebSearch: especificações, consumo e 1440p",
+      "WebSearch: preço no Brasil",
+      "WebSearch: benchmarks 1440p",
+      "WebFetch techspot.com review 2735",
+      "WebFetch gpuprix.com/pt/brazil/gpus/radeon-rx-7700-xt",
+      "WebFetch mysmartprice.com review",
+      "WebFetch cgmagonline.com review"
+    ],
+    "failed": "TechSpot e MySmartPrice bloquearam acesso (HTTP 403); números de 1440p e de especificações desses sites vêm só de resumos de busca",
+    "retryable": false
+  }
+}
