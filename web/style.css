@@ -1,0 +1,499 @@
+/* Placa de circuito: fundo claro, trilha verde ligando as etapas, LED de status em cada agente. */
+:root {
+  --papel: #f4f6f5;
+  --superficie: #ffffff;
+  --tinta: #17232a;
+  --apagado: #5f6f74;
+  --linha: #d3dbd8;
+  --trilha: #1e6b4e;
+  --led-ok: #22a565;
+  --led-ambar: #e09a12;
+  --led-falha: #c8382d;
+  --led-desligado: #b9c3c0;
+  --no-botao: #ffffff;
+  --texto: "Archivo", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papel: #121a18;
+    --superficie: #19231f;
+    --tinta: #e3eae7;
+    --apagado: #93a39e;
+    --linha: #2d3b36;
+    --trilha: #4f9e7d;
+    --led-ok: #3cc47f;
+    --led-ambar: #f0b03a;
+    --led-falha: #e8604f;
+    --led-desligado: #46544f;
+    --no-botao: #0f1714;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font: 400 1rem/1.5 var(--texto);
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 3rem 1rem 4rem;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-stretch: 72%;
+  line-height: 1.1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--trilha);
+  outline-offset: 2px;
+}
+
+/* Topo e pedido */
+
+.topo {
+  max-width: 44rem;
+}
+
+.topo h1 {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.topo p {
+  margin: 0.75rem 0 0;
+  color: var(--apagado);
+  font-size: 1.0625rem;
+}
+
+.pedido {
+  max-width: 48rem;
+  margin-top: 2rem;
+}
+
+.pedido > label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-weight: 600;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+  color: inherit;
+  font: inherit;
+  resize: vertical;
+}
+
+.opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  margin-top: 0.75rem;
+  color: var(--apagado);
+  font-size: 0.9375rem;
+}
+
+.opcoes input {
+  accent-color: var(--trilha);
+}
+
+button {
+  margin-left: auto;
+  padding: 0.625rem 1.5rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--trilha);
+  color: var(--no-botao);
+  font: 600 1rem var(--texto);
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.erro {
+  max-width: 48rem;
+  margin: 1.5rem 0 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--led-falha);
+  background: var(--superficie);
+}
+
+/* Etapas ligadas pela trilha */
+
+.fluxo {
+  margin-top: 3rem;
+}
+
+.etapas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: etapa;
+}
+
+.etapa {
+  position: relative;
+  padding: 0 0 2.25rem 2.75rem;
+  counter-increment: etapa;
+}
+
+/* A trilha liga o pad de uma etapa ao da seguinte. */
+.etapa::before {
+  content: "";
+  position: absolute;
+  top: 1.75rem;
+  bottom: 0;
+  left: 0.8125rem;
+  width: 2px;
+  background: var(--trilha);
+}
+
+.etapa:last-child::before {
+  display: none;
+}
+
+.etapa::after {
+  content: counter(etapa);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid var(--trilha);
+  border-radius: 50%;
+  background: var(--papel);
+  color: var(--trilha);
+  font: 600 0.8125rem var(--mono);
+}
+
+.etapa h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.75rem;
+}
+
+.pasta {
+  margin: 0.25rem 0 0;
+  color: var(--apagado);
+  font: 0.8125rem var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.log {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+}
+
+.log li {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.125rem 0;
+}
+
+.log .quando {
+  flex: 0 0 2.75rem;
+  color: var(--apagado);
+  font: 0.8125rem/1.5rem var(--mono);
+  text-align: right;
+}
+
+.log .texto {
+  overflow-wrap: anywhere;
+}
+
+.log .aviso,
+.log li.aviso .texto {
+  color: var(--led-falha);
+}
+
+/* Canais: um por agente, com o LED de status */
+
+.canais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.espera {
+  margin: 0;
+  color: var(--apagado);
+}
+
+.canal {
+  min-width: 0;
+  padding: 0.875rem 1rem 1rem;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+}
+
+.canal header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.canal h3 {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.estado {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.tempo {
+  color: var(--apagado);
+  font: 0.8125rem var(--mono);
+}
+
+.led {
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--led-desligado);
+}
+
+[data-status="running"] .led {
+  background: var(--led-ambar);
+  box-shadow: 0 0 0.5rem var(--led-ambar);
+  animation: piscar 1.2s ease-in-out infinite;
+}
+
+[data-status="ok"] .led {
+  background: var(--led-ok);
+  box-shadow: 0 0 0.375rem var(--led-ok);
+}
+
+[data-status="partial"] .led {
+  background: var(--led-ambar);
+}
+
+[data-status="failed"] .led {
+  background: var(--led-falha);
+}
+
+@keyframes piscar {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-status="running"] .led {
+    animation: none;
+  }
+}
+
+.ferramentas {
+  margin: 0.625rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--apagado);
+  font-size: 0.875rem;
+}
+
+.ferramentas li {
+  padding: 0.1875rem 0;
+  border-top: 1px solid var(--linha);
+  overflow-wrap: anywhere;
+}
+
+.ferramentas li:first-child {
+  border-top: 0;
+}
+
+.barrada .texto {
+  text-decoration: line-through;
+  text-decoration-color: var(--led-falha);
+}
+
+.aviso {
+  display: block;
+  color: var(--led-falha);
+  font-size: 0.8125rem;
+}
+
+.saida {
+  margin: 0.625rem 0 0;
+  font-size: 0.9375rem;
+}
+
+.saida:empty {
+  display: none;
+}
+
+.arquivo {
+  display: block;
+  color: var(--apagado);
+  font: 0.8125rem var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.mandado {
+  margin-top: 0.625rem;
+  font-size: 0.875rem;
+}
+
+.mandado summary {
+  color: var(--trilha);
+  cursor: pointer;
+}
+
+.mandado pre {
+  margin: 0.5rem 0 0;
+  padding: 0.625rem;
+  border-radius: 4px;
+  background: var(--papel);
+  font: 0.8125rem/1.45 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Resultado */
+
+.resultado {
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--trilha);
+}
+
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 1rem 2rem;
+  margin: 0;
+}
+
+.resumo dt {
+  color: var(--apagado);
+  font-size: 0.875rem;
+}
+
+.resumo dd {
+  margin: 0.125rem 0 0;
+  font-size: 1.5rem;
+  font-stretch: 80%;
+  font-weight: 700;
+}
+
+.resumo small {
+  display: block;
+  color: var(--apagado);
+  font-size: 0.875rem;
+  font-stretch: 100%;
+  font-weight: 400;
+}
+
+.resumo .alerta dd {
+  color: var(--led-falha);
+}
+
+.divergencias {
+  max-width: 48rem;
+  margin-top: 1.25rem;
+  font-size: 0.9375rem;
+}
+
+.divergencias summary {
+  color: var(--led-falha);
+  cursor: pointer;
+}
+
+.divergencias li {
+  margin-top: 0.375rem;
+}
+
+.relatorio {
+  max-width: 48rem;
+  margin-top: 2rem;
+}
+
+.relatorio h2 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.5625rem;
+  font-weight: 700;
+}
+
+.relatorio p,
+.relatorio li {
+  overflow-wrap: anywhere;
+}
+
+.relatorio table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.relatorio th,
+.relatorio td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--linha);
+  text-align: left;
+  vertical-align: top;
+}
+
+.relatorio th {
+  border-bottom: 2px solid var(--tinta);
+}
+
+.relatorio a {
+  color: var(--trilha);
+}
+
+.relatorio pre {
+  white-space: pre-wrap;
+  font: 0.875rem var(--mono);
+}
+
+@media (max-width: 40rem) {
+  main {
+    padding-top: 2rem;
+  }
+
+  .etapa {
+    padding-left: 2.25rem;
+  }
+
+  button {
+    width: 100%;
+    margin-left: 0;
+  }
+}

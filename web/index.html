@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pesquisador de hardware</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%2322a565'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js" integrity="sha384-H+hy9ULve6xfxRkWIh/YOtvDdpXgV2fmAGQkIDTxIgZwNoaoBal14Di2YTMR6MzR" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js" integrity="sha384-eEu5CTj3qGvu9PdJuS+YlkNi7d2XxQROAFYOr59zgObtlcux1ae1Il3u7jvdCSWu" crossorigin="anonymous" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="topo">
+      <h1>Pesquisador de hardware</h1>
+      <p>Escreva quais peças comparar e para quê. Um coordenador divide o trabalho entre agentes de busca, um analista e um sintetizador, e o relatório sai com a fonte de cada número.</p>
+    </header>
+
+    <form id="pesquisa" class="pedido">
+      <label for="pedido">O que você quer comparar?</label>
+      <textarea id="pedido" rows="3" required placeholder="Compare as SSDs Kingston NV3, WD Blue SN5000 e Crucial P3 Plus de 1 TB para jogos e edição de vídeo. Meu orçamento é R$ 500."></textarea>
+      <div class="opcoes">
+        <label><input type="checkbox" id="sequencial"> Uma busca por vez, para comparar o tempo</label>
+        <label><input type="checkbox" id="timeout"> Simular uma busca que expira</label>
+        <button id="pesquisar" type="submit">Pesquisar</button>
+      </div>
+    </form>
+
+    <p id="erro" class="erro" role="alert" hidden></p>
+
+    <section id="fluxo" class="fluxo" aria-label="Andamento da pesquisa" hidden>
+      <ol class="etapas">
+        <li class="etapa">
+          <h2>Coordenador</h2>
+          <p id="pasta" class="pasta"></p>
+          <ol id="log" class="log"></ol>
+        </li>
+        <li class="etapa">
+          <h2>Buscas</h2>
+          <div id="buscas" class="canais"></div>
+        </li>
+        <li class="etapa">
+          <h2>Análise</h2>
+          <div id="analista" class="canais"></div>
+        </li>
+        <li class="etapa">
+          <h2>Relatório</h2>
+          <div id="sintetizador" class="canais"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="resultado" class="resultado" aria-label="Resultado" hidden>
+      <dl id="resumo" class="resumo">
+        <div data-chave="custo" hidden><dt>Custo</dt><dd></dd></div>
+        <div data-chave="tempo" hidden><dt>Tempo total</dt><dd></dd></div>
+        <div data-chave="buscas" hidden><dt>Buscas, do início ao fim</dt><dd></dd></div>
+        <div data-chave="links" hidden><dt>Links vindos das buscas</dt><dd></dd></div>
+        <div data-chave="disputas" hidden><dt>Disputas no relatório</dt><dd></dd></div>
+        <div data-chave="trechos" hidden><dt>Trechos com o número do valor</dt><dd></dd></div>
+      </dl>
+      <details id="divergencias" class="divergencias" hidden>
+        <summary></summary>
+        <ul></ul>
+      </details>
+      <article id="relatorio" class="relatorio"></article>
+      <p id="salvo" class="pasta"></p>
+    </section>
+  </main>
+</body>
+</html>
